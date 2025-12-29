@@ -56,7 +56,7 @@ export function DashBoard() {
             </div>
           </div>
 
-          <div className="flex gap-6 mt-6">
+          <div className="flex gap-6 mt-6 items-start">
             {/* tabela de transacoes */}
             <div className="w-full max-w-[781px] bg-white rounded-xl border border-gray-200">
               {/* header */}
@@ -163,7 +163,7 @@ export function DashBoard() {
                   <ChevronRight className="size-5" />
                 </Link>
               </div>
-              <div className="p-6 flex flex-col gap-4">
+              <div className="p-6 flex flex-col gap-5">
                 {/* Alimentação */}
                 <div className="flex items-center justify-between gap-8">
                   <span className="px-6 py-1 rounded-full bg-blue-light text-blue-dark font-medium text-sm leading-5 whitespace-nowrap">

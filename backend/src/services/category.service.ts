@@ -1,5 +1,5 @@
 import { prismaClient } from '../../prisma/prisma';
-import type { CreateCategoryInput } from '../dtos/input/category.input';
+import type { CreateCategoryInput, UpdateCategoryInput } from '../dtos/input/category.input';
 
 export class CategoryService {
   async createCategory(data: CreateCategoryInput, userId: string) {
@@ -57,5 +57,46 @@ export class CategoryService {
     });
 
     return true;
+  }
+
+  async updateCategory(categoryId: string, data: UpdateCategoryInput, userId: string) {
+    const category = await prismaClient.category.findFirst({
+      where: {
+        id: categoryId,
+        userId: userId,
+      },
+    });
+
+    if (!category) {
+      throw new Error('Categoria não encontrada ou você não tem permissão para editá-la.');
+    }
+
+    if (data.title && data.title !== category.title) {
+      const existingCategory = await prismaClient.category.findFirst({
+        where: {
+          title: data.title,
+          userId: userId,
+          id: { not: categoryId },
+        },
+      });
+
+      if (existingCategory) {
+        throw new Error('Você já possui uma categoria com este título.');
+      }
+    }
+
+    const updatedCategory = await prismaClient.category.update({
+      where: {
+        id: categoryId,
+      },
+      data: {
+        title: data.title,
+        description: data.description,
+        icon: data.icon,
+        color: data.color,
+      },
+    });
+
+    return updatedCategory;
   }
 }

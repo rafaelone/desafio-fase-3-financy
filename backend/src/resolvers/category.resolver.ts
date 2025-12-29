@@ -27,6 +27,14 @@ export class CategoryResolver {
     return this.categoryService.createCategory(data, user.id);
   }
 
+  @Mutation(() => Boolean)
+  async deleteCategory(
+    @Arg('id', () => String) id: string,
+    @GqlUser() user: User,
+  ): Promise<boolean> {
+    return this.categoryService.deleteCategory(id, user.id);
+  }
+
   @FieldResolver(() => UserModel)
   async user(@Root() category: CategoryModel): Promise<UserModel> {
     const user = await prismaClient.user.findUnique({

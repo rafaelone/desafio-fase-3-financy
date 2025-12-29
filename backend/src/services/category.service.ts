@@ -37,4 +37,25 @@ export class CategoryService {
       },
     });
   }
+
+  async deleteCategory(categoryId: string, userId: string) {
+    const category = await prismaClient.category.findFirst({
+      where: {
+        id: categoryId,
+        userId: userId,
+      },
+    });
+
+    if (!category) {
+      throw new Error('Categoria não encontrada ou você não tem permissão para deletá-la.');
+    }
+
+    await prismaClient.category.delete({
+      where: {
+        id: categoryId,
+      },
+    });
+
+    return true;
+  }
 }

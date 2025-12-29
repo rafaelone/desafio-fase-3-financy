@@ -1,12 +1,6 @@
 import FinancyLogo from '@/assets/icons/financy-logo.svg';
-import {
-  EyeClosed,
-  Lock,
-  LogIn,
-  Mail,
-  UserRound,
-  UserRoundPlus,
-} from 'lucide-react';
+import { EyeClosed, Lock, LogIn, Mail, UserRound } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export function SignUp() {
   return (
@@ -99,14 +93,13 @@ export function SignUp() {
           <span className="mt-6 mb-4 text-center font-normal text-sm leading-5 text-gray-600">
             Já tem uma conta?
           </span>
-          <a
-            href="/"
-            type="button"
+          <Link
+            to="/"
             className="text-gray-700 font-medium text-base leading-6 flex gap-2 items-center justify-center px-4 py-3 h-12 rounded-lg bg-white border border-gray-300 hover:text-gray-400 transition-colors group"
           >
             <LogIn className="size-[18px] text-gray-700 group-hover:text-gray-400 " />
             Fazer login
-          </a>
+          </Link>
         </div>
       </div>
     </div>

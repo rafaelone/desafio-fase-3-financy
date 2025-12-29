@@ -1,6 +1,7 @@
 import FinancyLogo from '@/assets/icons/financy-logo.svg';
 import { EyeClosed, Lock, Mail, UserRoundPlus } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Link } from 'react-router-dom';
 
 export function SignIn() {
   return (
@@ -60,12 +61,12 @@ export function SignIn() {
                 Lembrar me
               </span>
             </label>
-            <a
-              href="#"
+            <Link
+              to="#"
               className="font-medium text-sm leading-5 text-brand-base"
             >
               Recuperar senha
-            </a>
+            </Link>
           </div>
           <button
             type="submit"
@@ -87,13 +88,13 @@ export function SignIn() {
           <span className="mt-6 mb-4 text-center font-normal text-sm leading-5 text-gray-600">
             Ainda não tem uma conta?
           </span>
-          <button
-            type="button"
+          <Link
+            to="/"
             className="text-gray-700 font-medium text-base leading-6 flex gap-2 items-center justify-center px-4 py-3 h-12 rounded-lg bg-white border border-gray-300 hover:text-gray-400 transition-colors group"
           >
             <UserRoundPlus className="size-[18px] text-gray-700 group-hover:text-gray-400 " />
             Criar conta
-          </button>
+          </Link>
         </div>
       </div>
     </div>

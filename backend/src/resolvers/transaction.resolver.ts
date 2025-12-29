@@ -2,7 +2,7 @@ import { Arg, FieldResolver, Mutation, Query, Resolver, Root, UseMiddleware } fr
 import { TransactionModel } from '../models/transaction.model';
 import { IsAuth } from '../middlewares/auth.middleware';
 import { TransactionService } from '../services/transaction.service';
-import { CreateTransactionInput } from '../dtos/input/transaction.input';
+import { CreateTransactionInput, UpdateTransactionInput } from '../dtos/input/transaction.input';
 import { GqlUser } from '../graphql/decorators/user.decorator';
 import type { User } from '@prisma/client';
 import { UserModel } from '../models/user.model';
@@ -34,6 +34,15 @@ export class TransactionResolver {
     @GqlUser() user: User,
   ): Promise<boolean> {
     return this.transactionService.deleteTransaction(id, user.id);
+  }
+
+  @Mutation(() => TransactionModel)
+  async updateTransaction(
+    @Arg('id', () => String) id: string,
+    @Arg('data', () => UpdateTransactionInput) data: UpdateTransactionInput,
+    @GqlUser() user: User,
+  ): Promise<TransactionModel> {
+    return this.transactionService.updateTransaction(id, data, user.id);
   }
 
   @FieldResolver(() => UserModel)

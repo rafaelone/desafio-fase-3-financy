@@ -3,6 +3,7 @@ import { TransactionModel } from '../models/transaction.model';
 import { IsAuth } from '../middlewares/auth.middleware';
 import { TransactionService } from '../services/transaction.service';
 import { CreateTransactionInput, UpdateTransactionInput } from '../dtos/input/transaction.input';
+import { TransactionFilterInput } from '../dtos/input/transaction-filter.input';
 import { GqlUser } from '../graphql/decorators/user.decorator';
 import type { User } from '@prisma/client';
 import { UserModel } from '../models/user.model';
@@ -16,8 +17,11 @@ export class TransactionResolver {
   private readonly transactionService = new TransactionService();
 
   @Query(() => [TransactionModel])
-  async listTransactions(@GqlUser() user: User): Promise<TransactionModel[]> {
-    return this.transactionService.listTransactions(user.id);
+  async listTransactions(
+    @Arg('filters', () => TransactionFilterInput, { nullable: true }) filters: TransactionFilterInput,
+    @GqlUser() user: User,
+  ): Promise<TransactionModel[]> {
+    return this.transactionService.listTransactions(user.id, filters);
   }
 
   @Mutation(() => TransactionModel)

@@ -1,5 +1,6 @@
 import { prismaClient } from '../../prisma/prisma';
 import type { CreateTransactionInput, UpdateTransactionInput } from '../dtos/input/transaction.input';
+import type { TransactionFilterInput } from '../dtos/input/transaction-filter.input';
 
 export class TransactionService {
   async createTransaction(data: CreateTransactionInput, userId: string) {
@@ -32,11 +33,58 @@ export class TransactionService {
     return transaction;
   }
 
-  async listTransactions(userId: string) {
+  async listTransactions(userId: string, filters?: TransactionFilterInput) {
+    const where: any = {
+      userId: userId,
+    };
+
+    if (filters?.description) {
+      where.description = {
+        contains: filters.description,
+      };
+    }
+
+    if (filters?.type) {
+      where.type = filters.type;
+    }
+
+    if (filters?.categoryId) {
+      where.categoryId = filters.categoryId;
+    }
+
+    if (filters?.year || filters?.month) {
+      const year = filters.year || new Date().getFullYear();
+      const month = filters.month;
+
+      let startDate: Date;
+      let endDate: Date;
+
+      if (month) {
+        startDate = new Date(year, month - 1, 1, 0, 0, 0);
+        endDate = new Date(year, month, 0, 23, 59, 59, 999);
+      } else {
+        startDate = new Date(year, 0, 1, 0, 0, 0);
+        endDate = new Date(year, 11, 31, 23, 59, 59, 999);
+      }
+
+      where.date = {
+        gte: startDate,
+        lte: endDate,
+      };
+    } else if (filters?.startDate || filters?.endDate) {
+      where.date = {};
+      
+      if (filters.startDate) {
+        where.date.gte = filters.startDate;
+      }
+      
+      if (filters.endDate) {
+        where.date.lte = filters.endDate;
+      }
+    }
+
     return prismaClient.transaction.findMany({
-      where: {
-        userId: userId,
-      },
+      where,
       orderBy: {
         date: 'desc',
       },
@@ -63,10 +111,8 @@ export class TransactionService {
 
     return true;
   }
-}
 
   async updateTransaction(transactionId: string, data: UpdateTransactionInput, userId: string) {
-    // Verificar se a transação existe e pertence ao usuário
     const transaction = await prismaClient.transaction.findFirst({
       where: {
         id: transactionId,
@@ -78,12 +124,10 @@ export class TransactionService {
       throw new Error('Transação não encontrada ou você não tem permissão para editá-la.');
     }
 
-    // Validar tipo se fornecido
     if (data.type && data.type !== 'expense' && data.type !== 'income') {
       throw new Error('Tipo de transação inválido. Use "expense" ou "income".');
     }
 
-    // Validar categoria se fornecida
     if (data.categoryId) {
       const category = await prismaClient.category.findFirst({
         where: {
@@ -97,7 +141,6 @@ export class TransactionService {
       }
     }
 
-    // Atualizar a transação
     const updatedTransaction = await prismaClient.transaction.update({
       where: {
         id: transactionId,
@@ -113,3 +156,4 @@ export class TransactionService {
 
     return updatedTransaction;
   }
+}

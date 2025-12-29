@@ -59,7 +59,7 @@ type Mutation {
 type Query {
   hello: String!
   listCategories: [CategoryModel!]!
-  listTransactions: [TransactionModel!]!
+  listTransactions(filters: TransactionFilterInput): [TransactionModel!]!
 }
 
 input RegisterInput {
@@ -72,6 +72,16 @@ type RegisterOutput {
   refreshToken: String!
   token: String!
   user: UserModel!
+}
+
+input TransactionFilterInput {
+  categoryId: String
+  description: String
+  endDate: DateTimeISO
+  month: Int
+  startDate: DateTimeISO
+  type: String
+  year: Int
 }
 
 type TransactionModel {

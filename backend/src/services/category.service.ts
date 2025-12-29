@@ -28,14 +28,46 @@ export class CategoryService {
   }
 
   async listCategories(userId: string) {
-    return prismaClient.category.findMany({
+    const categories = await prismaClient.category.findMany({
       where: {
         userId: userId,
+      },
+      include: {
+        _count: {
+          select: {
+            transactions: true,
+          },
+        },
       },
       orderBy: {
         title: 'asc',
       },
     });
+
+    const categoriesWithCount = categories.map((category) => ({
+      ...category,
+      transactionCount: category._count.transactions,
+    }));
+
+    const totalCategories = categories.length;
+
+    const totalTransactions = await prismaClient.transaction.count({
+      where: {
+        userId: userId,
+      },
+    });
+
+    // Categoria mais utilizada
+    const mostUsedCategory = categoriesWithCount.reduce((prev, current) => {
+      return current.transactionCount > (prev?.transactionCount || 0) ? current : prev;
+    }, categoriesWithCount[0] || null);
+
+    return {
+      categories: categoriesWithCount,
+      totalCategories,
+      totalTransactions,
+      mostUsedCategory: mostUsedCategory?.transactionCount > 0 ? mostUsedCategory : null,
+    };
   }
 
   async deleteCategory(categoryId: string, userId: string) {

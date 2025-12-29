@@ -8,14 +8,15 @@ import type { User } from '@prisma/client';
 import { UserModel } from '../models/user.model';
 import { TransactionModel } from '../models/transaction.model';
 import { prismaClient } from '../../prisma/prisma';
+import { CategoriesListOutput } from '../dtos/output/category.output';
 
 @Resolver(() => CategoryModel)
 @UseMiddleware(IsAuth)
 export class CategoryResolver {
   private readonly categoryService = new CategoryService();
 
-  @Query(() => [CategoryModel])
-  async listCategories(@GqlUser() user: User): Promise<CategoryModel[]> {
+  @Query(() => CategoriesListOutput)
+  async listCategories(@GqlUser() user: User): Promise<CategoriesListOutput> {
     return this.categoryService.listCategories(user.id);
   }
 

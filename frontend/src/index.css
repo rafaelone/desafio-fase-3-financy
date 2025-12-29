@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+
+
 @theme {
   /* Brand */
   --color-brand-dark: #124B2B;
@@ -24,31 +26,45 @@
   --color-success: #19AD70;
 
   /* Colors */
-  --blue-dark: #1D4ED8;
-  --blue-base: #2563EB;
-  --blue-light: #DBEAFE;
+  --color-blue-dark: #1D4ED8;
+  --color-blue-base: #2563EB;
+  --color-blue-light: #DBEAFE;
 
-  --purple-dark: #7E22CE;
-  --purple-base: #9333EA;
-  --purple-light: #F3E8FF;
+  --color-purple-dark: #7E22CE;
+  --color-purple-base: #9333EA;
+  --color-purple-light: #F3E8FF;
 
-  --pink-dark: #BE185D;
-  --pink-base: #DB2777;
-  --pink-light: #FCE7F3;
+  --color-pink-dark: #BE185D;
+  --color-pink-base: #DB2777;
+  --color-pink-light: #FCE7F3;
 
-  --red-dark: #B91C1C;
-  --red-base: #DC2626;
-  --red-light: #FEE2E2;
+  --color-red-dark: #B91C1C;
+  --color-red-base: #DC2626;
+  --color-red-light: #FEE2E2;
 
-  --orange-dark: #C2410C;
-  --orange-base: #EA580C;
-  --orange-light: #FFEDD5;
+  --color-orange-dark: #C2410C;
+  --color-orange-base: #EA580C;
+  --color-orange-light: #FFEDD5;
 
-  --yellow-dark: #A16207;
-  --yellow-base: #CA8A04;
-  --yellow-light: #F7F3CA;
+  --color-yellow-dark: #A16207;
+  --color-yellow-base: #CA8A04;
+  --color-yellow-light: #F7F3CA;
 
-  --green-dark: #15803D;
-  --green-base: #16A34A;
-  --green-light: #E0FAE9;
+  --color-green-dark: #15803D;
+  --color-green-base: #16A34A;
+  --color-green-light: #E0FAE9;
+
+  
+}
+
+* {
+  font-family: Inter, sans-serif;
+}
+
+body {
+  background-color: #F8F9FA;
+}
+
+button {
+  cursor:pointer
 }

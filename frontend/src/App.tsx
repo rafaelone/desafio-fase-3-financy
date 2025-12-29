@@ -1,5 +1,12 @@
+import { Routes, Route } from 'react-router-dom';
+import { SignIn } from './pages/SignIn';
+
 function App() {
-  return <h1 className="text-brand-base">Hello World</h1>;
+  return (
+    <Routes>
+      <Route path="/signIn" element={<SignIn />} />
+    </Routes>
+  );
 }
 
 export default App;

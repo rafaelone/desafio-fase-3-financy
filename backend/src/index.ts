@@ -17,7 +17,7 @@ async function bootstrap() {
 
   const schema = await buildSchema({
     resolvers: [AuthResolver, TransactionResolver, CategoryResolver, UserResolver],
-    validate: false,
+    validate: true,
     emitSchemaFile: './schema.graphql',
   });
 

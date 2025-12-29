@@ -83,12 +83,31 @@ export class TransactionService {
       }
     }
 
-    return prismaClient.transaction.findMany({
+    // Paginação
+    const page = filters?.page || 1;
+    const perPage = filters?.perPage || 10;
+    const skip = (page - 1) * perPage;
+
+    // Buscar total de registros
+    const total = await prismaClient.transaction.count({ where });
+
+    // Buscar transações paginadas
+    const transactions = await prismaClient.transaction.findMany({
       where,
       orderBy: {
         date: 'desc',
       },
+      skip,
+      take: perPage,
     });
+
+    const totalPages = Math.ceil(total / perPage);
+
+    return {
+      transactions,
+      total,
+      totalPages,
+    };
   }
 
   async deleteTransaction(transactionId: string, userId: string) {

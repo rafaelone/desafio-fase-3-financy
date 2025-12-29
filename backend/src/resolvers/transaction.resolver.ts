@@ -7,20 +7,20 @@ import { TransactionFilterInput } from '../dtos/input/transaction-filter.input';
 import { GqlUser } from '../graphql/decorators/user.decorator';
 import type { User } from '@prisma/client';
 import { UserModel } from '../models/user.model';
-
 import { prismaClient } from '../../prisma/prisma';
 import { CategoryModel } from '../models/category.model';
+import { PaginatedTransactionsOutput } from '../dtos/output/transaction.output';
 
 @Resolver(() => TransactionModel)
 @UseMiddleware(IsAuth)
 export class TransactionResolver {
   private readonly transactionService = new TransactionService();
 
-  @Query(() => [TransactionModel])
+  @Query(() => PaginatedTransactionsOutput)
   async listTransactions(
     @Arg('filters', () => TransactionFilterInput, { nullable: true }) filters: TransactionFilterInput,
     @GqlUser() user: User,
-  ): Promise<TransactionModel[]> {
+  ): Promise<PaginatedTransactionsOutput> {
     return this.transactionService.listTransactions(user.id, filters);
   }
 

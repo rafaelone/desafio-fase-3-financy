@@ -56,10 +56,16 @@ type Mutation {
   updateTransaction(data: UpdateTransactionInput!, id: String!): TransactionModel!
 }
 
+type PaginatedTransactionsOutput {
+  total: Int!
+  totalPages: Int!
+  transactions: [TransactionModel!]!
+}
+
 type Query {
   hello: String!
   listCategories: [CategoryModel!]!
-  listTransactions(filters: TransactionFilterInput): [TransactionModel!]!
+  listTransactions(filters: TransactionFilterInput): PaginatedTransactionsOutput!
 }
 
 input RegisterInput {
@@ -79,6 +85,8 @@ input TransactionFilterInput {
   description: String
   endDate: DateTimeISO
   month: Int
+  page: Int = 1
+  perPage: Int = 10
   startDate: DateTimeISO
   type: String
   year: Int

@@ -22,4 +22,10 @@ export class TransactionFilterInput {
 
   @Field(() => Int, { nullable: true })
   month?: number;
+
+  @Field(() => Int, { nullable: true, defaultValue: 1 })
+  page?: number;
+
+  @Field(() => Int, { nullable: true, defaultValue: 10 })
+  perPage?: number;
 }

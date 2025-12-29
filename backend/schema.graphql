@@ -3,6 +3,34 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type CategoryModel {
+  color: String!
+  createdAt: DateTimeISO!
+  description: String
+  icon: String!
+  id: ID!
+  title: String!
+  transactions: [TransactionModel!]!
+  updatedAt: DateTimeISO!
+  user: UserModel!
+  userId: String!
+}
+
+input CreateCategoryInput {
+  color: String!
+  description: String
+  icon: String!
+  title: String!
+}
+
+input CreateTransactionInput {
+  amount: Float!
+  categoryId: String!
+  date: DateTimeISO!
+  description: String!
+  type: String!
+}
+
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.This scalar is serialized to a string in ISO 8601 format and parsed from a string in ISO 8601 format.
 """
@@ -20,12 +48,16 @@ type LoginOutput {
 }
 
 type Mutation {
+  createCategory(data: CreateCategoryInput!): CategoryModel!
+  createTransaction(data: CreateTransactionInput!): TransactionModel!
   login(data: LoginInput!): LoginOutput!
   register(data: RegisterInput!): RegisterOutput!
 }
 
 type Query {
   hello: String!
+  listCategories: [CategoryModel!]!
+  listTransactions: [TransactionModel!]!
 }
 
 input RegisterInput {
@@ -38,6 +70,20 @@ type RegisterOutput {
   refreshToken: String!
   token: String!
   user: UserModel!
+}
+
+type TransactionModel {
+  amount: Float!
+  category: CategoryModel!
+  categoryId: String!
+  createdAt: DateTimeISO!
+  date: DateTimeISO!
+  description: String!
+  id: ID!
+  type: String!
+  updatedAt: DateTimeISO!
+  user: UserModel!
+  userId: String!
 }
 
 type UserModel {

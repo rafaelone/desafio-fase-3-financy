@@ -42,4 +42,27 @@ export class TransactionService {
       },
     });
   }
+
+  async deleteTransaction(transactionId: string, userId: string) {
+    // Verificar se a transação existe e pertence ao usuário
+    const transaction = await prismaClient.transaction.findFirst({
+      where: {
+        id: transactionId,
+        userId: userId,
+      },
+    });
+
+    if (!transaction) {
+      throw new Error('Transação não encontrada ou você não tem permissão para deletá-la.');
+    }
+
+    // Deletar a transação
+    await prismaClient.transaction.delete({
+      where: {
+        id: transactionId,
+      },
+    });
+
+    return true;
+  }
 }

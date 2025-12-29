@@ -28,6 +28,14 @@ export class TransactionResolver {
     return this.transactionService.createTransaction(data, user.id);
   }
 
+  @Mutation(() => Boolean)
+  async deleteTransaction(
+    @Arg('id', () => String) id: string,
+    @GqlUser() user: User,
+  ): Promise<boolean> {
+    return this.transactionService.deleteTransaction(id, user.id);
+  }
+
   @FieldResolver(() => UserModel)
   async user(@Root() transaction: TransactionModel): Promise<UserModel> {
     const user = await prismaClient.user.findUnique({

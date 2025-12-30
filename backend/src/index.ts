@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 import 'dotenv/config';
+import cors from 'cors';
+
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express5';
 import express from 'express';
@@ -11,12 +13,23 @@ import { TransactionResolver } from './resolvers/transaction.resolver';
 import { CategoryResolver } from './resolvers/category.resolver';
 import { UserResolver } from './resolvers/user.resolver';
 
-
 async function bootstrap() {
   const app = express();
 
+  app.use(
+    cors({
+      origin: 'http://localhost:5173',
+      credentials: true,
+    }),
+  );
+
   const schema = await buildSchema({
-    resolvers: [AuthResolver, TransactionResolver, CategoryResolver, UserResolver],
+    resolvers: [
+      AuthResolver,
+      TransactionResolver,
+      CategoryResolver,
+      UserResolver,
+    ],
     validate: true,
     emitSchemaFile: './schema.graphql',
   });
@@ -43,4 +56,4 @@ async function bootstrap() {
   );
 }
 
-bootstrap()
+bootstrap();

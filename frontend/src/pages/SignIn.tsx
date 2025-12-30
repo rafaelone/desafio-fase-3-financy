@@ -89,7 +89,7 @@ export function SignIn() {
             Ainda não tem uma conta?
           </span>
           <Link
-            to="/"
+            to="/signUp"
             className="text-gray-700 font-medium text-base leading-6 flex gap-2 items-center justify-center px-4 py-3 h-12 rounded-lg bg-white border border-gray-300 hover:text-gray-400 transition-colors group"
           >
             <UserRoundPlus className="size-[18px] text-gray-700 group-hover:text-gray-400 " />

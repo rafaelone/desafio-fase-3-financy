@@ -3,6 +3,13 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type CategoriesListOutput {
+  categories: [CategoryWithStats!]!
+  mostUsedCategory: CategoryWithStats
+  totalCategories: Int!
+  totalTransactions: Int!
+}
+
 type CategoryModel {
   color: String!
   createdAt: DateTimeISO!
@@ -10,6 +17,20 @@ type CategoryModel {
   icon: String!
   id: ID!
   title: String!
+  transactions: [TransactionModel!]!
+  updatedAt: DateTimeISO!
+  user: UserModel!
+  userId: String!
+}
+
+type CategoryWithStats {
+  color: String!
+  createdAt: DateTimeISO!
+  description: String
+  icon: String!
+  id: ID!
+  title: String!
+  transactionCount: Int!
   transactions: [TransactionModel!]!
   updatedAt: DateTimeISO!
   user: UserModel!
@@ -54,7 +75,9 @@ type Mutation {
   deleteTransaction(id: String!): Boolean!
   login(data: LoginInput!): LoginOutput!
   register(data: RegisterInput!): RegisterOutput!
+  updateCategory(data: UpdateCategoryInput!, id: String!): CategoryModel!
   updateTransaction(data: UpdateTransactionInput!, id: String!): TransactionModel!
+  updateUser(data: UpdateUserInput!): UserModel!
 }
 
 type PaginatedTransactionsOutput {
@@ -65,8 +88,9 @@ type PaginatedTransactionsOutput {
 
 type Query {
   hello: String!
-  listCategories: [CategoryModel!]!
+  listCategories: CategoriesListOutput!
   listTransactions(filters: TransactionFilterInput): PaginatedTransactionsOutput!
+  me: UserModel!
 }
 
 input RegisterInput {
@@ -107,12 +131,23 @@ type TransactionModel {
   userId: String!
 }
 
+input UpdateCategoryInput {
+  color: String
+  description: String
+  icon: String
+  title: String
+}
+
 input UpdateTransactionInput {
   amount: Float
   categoryId: String
   date: DateTimeISO
   description: String
   type: String
+}
+
+input UpdateUserInput {
+  fullName: String!
 }
 
 type UserModel {

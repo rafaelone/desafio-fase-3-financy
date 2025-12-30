@@ -14,9 +14,11 @@ type RegisterMutationData = {
 };
 
 type LoginMutationData = {
-  token: string;
-  refreshToken: string;
-  user: User;
+  login: {
+    token: string;
+    refreshToken: string;
+    user: User;
+  };
 };
 
 type AuthState = {
@@ -49,8 +51,8 @@ export const useAuthStore = create<AuthState>()(
             },
           });
 
-          if (data?.user) {
-            const { user, token } = data;
+          if (data?.login) {
+            const { user, token } = data.login;
             set({
               user: {
                 id: user.id,

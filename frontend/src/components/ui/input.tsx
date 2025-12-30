@@ -21,7 +21,7 @@ export function Input({
   ...rest
 }: InputProps) {
   return (
-    <>
+    <div>
       <div className="flex flex-col gap-2">
         <label
           htmlFor={htmlFor}
@@ -54,6 +54,6 @@ export function Input({
           {errorMessage}
         </span>
       )}
-    </>
+    </div>
   );
 }

@@ -1,89 +1,62 @@
 import { Input } from '@/components/ui/input';
-import {
-  Eye,
-  EyeClosed,
-  LoaderCircle,
-  Lock,
-  Mail,
-  UserRound,
-} from 'lucide-react';
+import { Eye, EyeClosed, LoaderCircle, Lock, Mail } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState } from 'react';
-import { Button } from '../ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Link } from 'react-router-dom';
 import { useAuthStore } from '@/stores/auth';
 import { toast } from 'sonner';
+import { Button } from '../ui/button';
 
-const signUpSchema = z.object({
-  fullName: z
-    .string()
-    .min(1, 'Nome completo é obrigatório')
-    .refine((name) => name.trim().split(' ').length >= 2, {
-      message: 'Digite seu nome completo',
-    }),
+const signInSchema = z.object({
   email: z.string().min(1, 'E-mail é obrigatório').email('E-mail inválido'),
-  password: z.string().min(8, 'A senha deve ter no mínimo 8 caracteres'),
+  password: z.string().min(1, 'Senha é obrigatória'),
 });
 
-type SignUpFormData = z.infer<typeof signUpSchema>;
+type SignInFormData = z.infer<typeof signInSchema>;
 
-export function SignUpForm() {
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+export function SignInForm() {
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SignUpFormData>({
-    resolver: zodResolver(signUpSchema),
+  } = useForm<SignInFormData>({
+    resolver: zodResolver(signInSchema),
   });
 
-  const signup = useAuthStore((state) => state.signup);
+  const login = useAuthStore((state) => state.login);
 
-  async function onSubmit({
-    fullName,
-    email,
-    password,
-  }: SignUpFormData): Promise<void> {
+  async function onSubmit({ email, password }: SignInFormData) {
     try {
-      const signupMutate = await signup({
-        fullName,
+      const loginMutate = await login({
         email,
         password,
       });
-
-      if (signupMutate) {
-        toast.success('Cadastro realizado com sucesso!');
+      if (loginMutate) {
+        toast.success('Login realizado com sucesso!');
       }
     } catch {
-      toast.error('Erro ao realizar o cadastro');
+      toast.error('Falha ao realizar o login!');
     }
   }
 
-  function togglePasswordVisibility(): void {
+  function togglePasswordVisibility() {
     setShowPassword(!showPassword);
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <h1 className="text-gray-800 font-bold text-[20px] leading-7 text-center mb-1">
-        Criar conta
+        Fazer login
       </h1>
       <p className="text-base font-normal text-gray-600 leading-6 text-center mb-8">
-        Comece a controlar suas finanças ainda hoje
+        Entre na sua conta para continuar
       </p>
       <div className="flex flex-col gap-4">
-        <Input
-          htmlFor="fullName"
-          labelText="Nome completo"
-          iconLeft={<UserRound className="text-gray-400 size-4" />}
-          placeholder="Seu nome completo"
-          type="text"
-          errorMessage={errors.fullName && errors.fullName.message}
-          {...register('fullName')}
-        />
-
         <Input
           htmlFor="email"
           labelText="E-mail"
@@ -112,6 +85,22 @@ export function SignUpForm() {
           {...register('password')}
         />
       </div>
+
+      <div className="mt-[18px] flex justify-between">
+        <label className="gap-2 flex items-center cursor-pointer">
+          <Checkbox id="remember-me" />
+          <span className="font-normal text-sm leading-5 text-gray-700">
+            Lembrar me
+          </span>
+        </label>
+        <Link
+          to="/forgot-password"
+          className="font-medium text-sm leading-5 text-brand-base hover:text-brand-dark transition-colors"
+        >
+          Recuperar senha
+        </Link>
+      </div>
+
       <Button
         disabled={isSubmitting}
         background="primary"

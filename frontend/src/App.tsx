@@ -5,10 +5,15 @@ import { DashBoard } from './pages/Dashboard';
 import { Transactions } from './pages/Transactions';
 import { Categories } from './pages/Categories';
 import { useAuthStore } from './stores/auth';
+import { PrivateLayout } from './components/layouts/private-layout';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore();
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
+  return isAuthenticated ? (
+    <PrivateLayout>{children}</PrivateLayout>
+  ) : (
+    <Navigate to="/" replace />
+  );
 }
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
@@ -22,7 +27,13 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 
 function RootRedirect() {
   const { isAuthenticated } = useAuthStore();
-  return isAuthenticated ? <DashBoard /> : <SignIn />;
+  return isAuthenticated ? (
+    <PrivateLayout>
+      <DashBoard />
+    </PrivateLayout>
+  ) : (
+    <SignIn />
+  );
 }
 
 function App() {

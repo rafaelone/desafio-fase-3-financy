@@ -3,6 +3,12 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type BalanceModel {
+  totalBalance: Float!
+  totalExpense: Float!
+  totalIncome: Float!
+}
+
 type CategoriesListOutput {
   categories: [CategoryWithStats!]!
   mostUsedCategory: CategoryWithStats
@@ -87,6 +93,7 @@ type PaginatedTransactionsOutput {
 }
 
 type Query {
+  getBalance: BalanceModel!
   hello: String!
   listCategories: CategoriesListOutput!
   listTransactions(filters: TransactionFilterInput): PaginatedTransactionsOutput!

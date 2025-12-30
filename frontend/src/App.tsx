@@ -3,6 +3,7 @@ import { SignIn } from './pages/SignIn';
 import { SignUp } from './pages/SignUp';
 import { DashBoard } from './pages/Dashboard';
 import { Transactions } from './pages/Transactions';
+import { Categories } from './pages/Categories';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Route path="/signUp" element={<SignUp />} />
       <Route path="/dashboard" element={<DashBoard />} />
       <Route path="/transactions" element={<Transactions />} />
+      <Route path="/categories" element={<Categories />} />
     </Routes>
   );
 }

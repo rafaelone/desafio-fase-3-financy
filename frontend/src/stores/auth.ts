@@ -24,7 +24,9 @@ type LoginMutationData = {
 type AuthState = {
   user: User | null;
   token: string | null;
+  refreshToken: string | null;
   isAuthenticated: boolean;
+  setToken: (token: string) => void;
   signup: (data: RegisterInput) => Promise<boolean>;
   login: (data: LoginInput) => Promise<boolean>;
   logout: () => void;
@@ -35,7 +37,9 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       user: null,
       token: null,
+      refreshToken: null,
       isAuthenticated: false,
+      setToken: (token: string) => set({ token }),
       login: async (loginData: LoginInput) => {
         try {
           const { data } = await apolloClient.mutate<
@@ -52,7 +56,7 @@ export const useAuthStore = create<AuthState>()(
           });
 
           if (data?.login) {
-            const { user, token } = data.login;
+            const { user, token, refreshToken } = data.login;
             set({
               user: {
                 id: user.id,
@@ -62,6 +66,7 @@ export const useAuthStore = create<AuthState>()(
                 updatedAt: user.updatedAt,
               },
               token,
+              refreshToken,
               isAuthenticated: true,
             });
             return true;
@@ -87,9 +92,9 @@ export const useAuthStore = create<AuthState>()(
               },
             },
           });
-          console.log('DATAAAAA', data);
+          
           if (data?.register) {
-            const { token, user } = data.register;
+            const { token, refreshToken, user } = data.register;
             set({
               user: {
                 id: user.id,
@@ -99,6 +104,7 @@ export const useAuthStore = create<AuthState>()(
                 updatedAt: user.updatedAt,
               },
               token,
+              refreshToken,
               isAuthenticated: true,
             });
             return true;
@@ -113,6 +119,7 @@ export const useAuthStore = create<AuthState>()(
         set({
           user: null,
           token: null,
+          refreshToken: null,
           isAuthenticated: false,
         });
         apolloClient.clearStore();

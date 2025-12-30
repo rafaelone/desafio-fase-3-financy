@@ -2,7 +2,7 @@ import type { User } from '@prisma/client';
 import { prismaClient } from '../../prisma/prisma';
 
 import { comparePassword, hashPassword } from '../utils/hash';
-import { signJwt } from '../utils/jwt';
+import { signJwt, verifyJwt, type JwtPayload } from '../utils/jwt';
 import type { LoginInput, RegisterInput } from '../dtos/input/auth.input';
 
 export class AuthService {
@@ -43,6 +43,22 @@ export class AuthService {
     return this.generateTokens(user);
   }
 
+  async refreshToken(refreshToken: string) {
+    try {
+      const payload = verifyJwt(refreshToken) as JwtPayload;
+      
+      const user = await prismaClient.user.findUnique({
+        where: { id: payload.id },
+      });
+
+      if (!user) throw new Error('Usuário não encontrado');
+
+      return this.generateTokens(user);
+    } catch (error) {
+      throw new Error('Refresh token inválido ou expirado');
+    }
+  }
+
   generateTokens(user: User) {
     const token = signJwt(
       {
@@ -57,7 +73,7 @@ export class AuthService {
         id: user.id,
         email: user.email,
       },
-      '1d',
+      '7d',
     );
 
     return { token, refreshToken, user };

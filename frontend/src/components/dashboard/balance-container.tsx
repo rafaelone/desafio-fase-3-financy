@@ -7,7 +7,7 @@ import { CircleArrowDown, CircleArrowUp, Wallet } from 'lucide-react';
 import { BalanceCard } from './balance-card';
 
 export function BalanceContainer() {
-  const { data, loading } = useQuery<{ getBalance: Balance }>(GET_BALANCE, {});
+  const { data, loading } = useQuery<{ getBalance: Balance }>(GET_BALANCE);
 
   return (
     <div className="flex gap-6 items-center max-lg:flex-col">

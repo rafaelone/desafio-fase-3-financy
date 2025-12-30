@@ -22,7 +22,9 @@ export const buildContext = async ({
     try {
       const payload = verifyJwt(token) as JwtPayload;
       user = payload.id;
-    } catch (error) {}
+    } catch (error) {
+      console.log('Token inválido ou expirado:', error);
+    }
   }
 
   return { user, token, req, res };

@@ -9,7 +9,7 @@ type BalanceCard = {
   value: number;
 };
 
-export function BalanceCard({
+export function DashboardBalanceCard({
   loading = true,
   title,
   icon,

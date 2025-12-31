@@ -24,18 +24,22 @@ export class CategoryService {
       },
     });
 
-    return category;
+    return {
+      ...category,
+      transactionCount: 0,
+      totalAmount: 0,
+    };
   }
 
-  async listCategories(userId: string) {
+  async listCategories(userId: string, limit?: number) {
     const categories = await prismaClient.category.findMany({
       where: {
         userId: userId,
       },
       include: {
-        _count: {
+        transactions: {
           select: {
-            transactions: true,
+            amount: true,
           },
         },
       },
@@ -44,29 +48,39 @@ export class CategoryService {
       },
     });
 
-    const categoriesWithCount = categories.map((category) => ({
-      ...category,
-      transactionCount: category._count.transactions,
-    }));
+    const categoriesWithStats = categories.map((category) => {
+      const transactionCount = category.transactions.length;
+      const totalAmount = category.transactions.reduce((sum, transaction) => {
+        return sum + transaction.amount;
+      }, 0);
 
-    const totalCategories = categories.length;
-
-    const totalTransactions = await prismaClient.transaction.count({
-      where: {
-        userId: userId,
-      },
+      return {
+        id: category.id,
+        title: category.title,
+        description: category.description,
+        icon: category.icon,
+        color: category.color,
+        userId: category.userId,
+        createdAt: category.createdAt,
+        updatedAt: category.updatedAt,
+        transactionCount,
+        totalAmount: totalAmount,
+      };
     });
 
-    // Categoria mais utilizada
-    const mostUsedCategory = categoriesWithCount.reduce((prev, current) => {
-      return current.transactionCount > (prev?.transactionCount || 0) ? current : prev;
-    }, categoriesWithCount[0] || null);
+    categoriesWithStats.sort((a, b) => b.transactionCount - a.transactionCount);
+
+    const totalCategories = categoriesWithStats.length;
+    const totalTransactions = categoriesWithStats.reduce((sum, cat) => sum + cat.transactionCount, 0);
+    const mostUsedCategory = categoriesWithStats[0]?.transactionCount > 0 ? categoriesWithStats[0] : null;
+
+    const limitedCategories = limit ? categoriesWithStats.slice(0, limit) : categoriesWithStats;
 
     return {
-      categories: categoriesWithCount,
+      categories: limitedCategories,
       totalCategories,
       totalTransactions,
-      mostUsedCategory: mostUsedCategory?.transactionCount > 0 ? mostUsedCategory : null,
+      mostUsedCategory,
     };
   }
 
@@ -129,6 +143,23 @@ export class CategoryService {
       },
     });
 
-    return updatedCategory;
+    // Busca as transações para calcular stats
+    const transactions = await prismaClient.transaction.findMany({
+      where: {
+        categoryId: categoryId,
+      },
+      select: {
+        amount: true,
+      },
+    });
+
+    const transactionCount = transactions.length;
+    const totalAmount = transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
+
+    return {
+      ...updatedCategory,
+      transactionCount,
+      totalAmount: Math.round(totalAmount * 100) / 100,
+    };
   }
 }

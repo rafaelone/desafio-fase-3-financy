@@ -1,4 +1,5 @@
-import { BalanceContainer } from '@/components/dashboard/balance-container';
+import { DashboardBalanceContainer } from '@/components/dashboard/dashboard-balance-container';
+import { DashboardCategories } from '@/components/dashboard/dashboard-categories';
 import {
   BriefcaseBusiness,
   ChevronRight,
@@ -13,7 +14,7 @@ export function DashBoard() {
   return (
     <main className="max-w-[1184px] w-auto mx-auto mt-12">
       {/* cards */}
-      <BalanceContainer />
+      <DashboardBalanceContainer />
       <div className="flex gap-6 mt-6 items-start">
         {/* tabela de transacoes */}
         <div className="w-full max-w-[781px] bg-white rounded-xl border border-gray-200">
@@ -108,96 +109,7 @@ export function DashBoard() {
           </div>
         </div>
         {/* tabela de categorias */}
-        <div className="max-w-[378px] w-full bg-white rounded-xl border border-gray-200">
-          <div className="flex items-center justify-between h-[61px] border-b border-b-gray-200 px-6">
-            <span className="font-medium text-xs leading-4  text-gray-500 uppercase">
-              Categorias
-            </span>
-            <Link
-              to="/"
-              className="text-brand-base items-center flex gap-1 font-medium text-sm leading-5 group hover:text-brand-dark"
-            >
-              Gerenciar
-              <ChevronRight className="size-5" />
-            </Link>
-          </div>
-          <div className="p-6 flex flex-col gap-5">
-            {/* Alimentação */}
-            <div className="flex items-center justify-between gap-8">
-              <span className="px-6 py-1 rounded-full bg-blue-light text-blue-dark font-medium text-sm leading-5 whitespace-nowrap">
-                Alimentação
-              </span>
-              <div className="flex items-center gap-4">
-                <span className="font-normal text-sm leading-5 text-gray-600 whitespace-nowrap">
-                  12 itens
-                </span>
-                <strong className="font-semibold text-sm leading-5 text-gray-800 whitespace-nowrap">
-                  R$ 542,30
-                </strong>
-              </div>
-            </div>
-
-            {/* Transporte */}
-            <div className="flex items-center justify-between gap-8">
-              <span className="px-6 py-1 rounded-full bg-purple-light text-purple-dark font-medium text-sm leading-5 whitespace-nowrap">
-                Transporte
-              </span>
-              <div className="flex items-center gap-4">
-                <span className="font-normal text-sm leading-5 text-gray-600 whitespace-nowrap">
-                  8 itens
-                </span>
-                <strong className="font-semibold text-sm leading-5 text-gray-800 whitespace-nowrap">
-                  R$ 385,50
-                </strong>
-              </div>
-            </div>
-
-            {/* Mercado */}
-            <div className="flex items-center justify-between gap-8">
-              <span className="px-6 py-1 rounded-full bg-orange-light text-orange-dark font-medium text-sm leading-5 whitespace-nowrap">
-                Mercado
-              </span>
-              <div className="flex items-center gap-4">
-                <span className="font-normal text-sm leading-5 text-gray-600 whitespace-nowrap">
-                  3 itens
-                </span>
-                <strong className="font-semibold text-sm leading-5 text-gray-800 whitespace-nowrap">
-                  R$ 298,75
-                </strong>
-              </div>
-            </div>
-
-            {/* Entretenimento */}
-            <div className="flex items-center justify-between gap-8">
-              <span className="px-6 py-1 rounded-full bg-pink-light text-pink-dark font-medium text-sm leading-5 whitespace-nowrap">
-                Entretenimento
-              </span>
-              <div className="flex items-center gap-4">
-                <span className="font-normal text-sm leading-5 text-gray-600 whitespace-nowrap">
-                  2 itens
-                </span>
-                <strong className="font-semibold text-sm leading-5 text-gray-800 whitespace-nowrap">
-                  R$ 186,20
-                </strong>
-              </div>
-            </div>
-
-            {/* Utilidades */}
-            <div className="flex items-center justify-between gap-8">
-              <span className="px-6 py-1 rounded-full bg-yellow-light text-yellow-dark font-medium text-sm leading-5 whitespace-nowrap">
-                Utilidades
-              </span>
-              <div className="flex items-center gap-4">
-                <span className="font-normal text-sm leading-5 text-gray-600 whitespace-nowrap">
-                  7 itens
-                </span>
-                <strong className="font-semibold text-sm leading-5 text-gray-800 whitespace-nowrap">
-                  R$ 245,80
-                </strong>
-              </div>
-            </div>
-          </div>
-        </div>
+        <DashboardCategories />
       </div>
     </main>
   );

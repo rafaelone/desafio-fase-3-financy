@@ -22,3 +22,21 @@ export type Balance = {
   totalExpense: number;
   totalIncome: number;
 };
+
+export type Category = {
+  id: string;
+  title: string;
+  icon: string;
+  color: string;
+  transactionCount: number;
+  totalAmount: number;
+};
+
+export type ListCategories = {
+  categories: Category[];
+  totalCategories: number;
+  totalTransactions: number;
+  mostUsedCategory: {
+    title: string;
+  };
+};

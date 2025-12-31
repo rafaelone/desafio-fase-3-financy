@@ -10,8 +10,8 @@ type BalanceModel {
 }
 
 type CategoriesListOutput {
-  categories: [CategoryWithStats!]!
-  mostUsedCategory: CategoryWithStats
+  categories: [CategoryModel!]!
+  mostUsedCategory: CategoryModel
   totalCategories: Int!
   totalTransactions: Int!
 }
@@ -23,19 +23,7 @@ type CategoryModel {
   icon: String!
   id: ID!
   title: String!
-  transactions: [TransactionModel!]!
-  updatedAt: DateTimeISO!
-  user: UserModel!
-  userId: String!
-}
-
-type CategoryWithStats {
-  color: String!
-  createdAt: DateTimeISO!
-  description: String
-  icon: String!
-  id: ID!
-  title: String!
+  totalAmount: Float!
   transactionCount: Int!
   transactions: [TransactionModel!]!
   updatedAt: DateTimeISO!
@@ -96,7 +84,7 @@ type PaginatedTransactionsOutput {
 type Query {
   getBalance: BalanceModel!
   hello: String!
-  listCategories: CategoriesListOutput!
+  listCategories(limit: Int): CategoriesListOutput!
   listTransactions(filters: TransactionFilterInput): PaginatedTransactionsOutput!
   me: UserModel!
 }

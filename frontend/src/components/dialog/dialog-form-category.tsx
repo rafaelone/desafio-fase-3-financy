@@ -35,9 +35,18 @@ type CategoryFormData = z.infer<typeof categorySchema>;
 
 type DialogFormCategoryProps = {
   onSubmit: (data: CategoryFormData) => void;
+  initialData?: {
+    title: string;
+    description?: string;
+    icon: string;
+    color: string;
+  };
 };
 
-export function DialogFormCategory({ onSubmit }: DialogFormCategoryProps) {
+export function DialogFormCategory({
+  onSubmit,
+  initialData,
+}: DialogFormCategoryProps) {
   const {
     register,
     handleSubmit,
@@ -45,7 +54,7 @@ export function DialogFormCategory({ onSubmit }: DialogFormCategoryProps) {
     formState: { errors, isSubmitting },
   } = useForm<CategoryFormData>({
     resolver: zodResolver(categorySchema),
-    defaultValues: {
+    defaultValues: initialData || {
       icon: 'business',
       color: 'green',
     },

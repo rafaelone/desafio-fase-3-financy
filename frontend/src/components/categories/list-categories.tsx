@@ -1,6 +1,8 @@
 import { useQuery } from '@apollo/client/react';
 import { LIST_ALL_CATEGORIES } from '@/lib/graphql/queries/list-all-categories';
 import { CardCategory } from './card-category';
+import { CardCategorySkeleton } from './card-category-skeleton';
+import { EmptyCategories } from './empty-categories';
 
 type Category = {
   id: string;
@@ -22,7 +24,9 @@ export function ListCategories() {
   if (loading) {
     return (
       <div className="flex items-center gap-4 flex-wrap">
-        <p>Carregando categorias...</p>
+        {[1, 2, 3, 4].map((i) => (
+          <CardCategorySkeleton key={i} />
+        ))}
       </div>
     );
   }
@@ -30,11 +34,7 @@ export function ListCategories() {
   const categories = data?.listCategories.categories || [];
 
   if (categories.length === 0) {
-    return (
-      <div className="flex items-center gap-4 flex-wrap">
-        <p className="text-gray-600">Nenhuma categoria cadastrada ainda.</p>
-      </div>
-    );
+    return <EmptyCategories />;
   }
 
   return (

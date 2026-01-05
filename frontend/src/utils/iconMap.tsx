@@ -1,0 +1,40 @@
+import {
+  Home,
+  ShoppingCart,
+  Utensils,
+  Car,
+  Heart,
+  Briefcase,
+  GraduationCap,
+  Plane,
+  Shirt,
+  Smartphone,
+  Dumbbell,
+  Film,
+  Gift,
+  PiggyBank,
+  Wrench,
+  Coffee,
+} from 'lucide-react';
+
+export const iconMap: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
+  home: Home,
+  'shopping-cart': ShoppingCart,
+  utensils: Utensils,
+  car: Car,
+  heart: Heart,
+  briefcase: Briefcase,
+  'graduation-cap': GraduationCap,
+  plane: Plane,
+  shirt: Shirt,
+  smartphone: Smartphone,
+  dumbbell: Dumbbell,
+  film: Film,
+  gift: Gift,
+  'piggy-bank': PiggyBank,
+  wrench: Wrench,
+  coffee: Coffee,
+};

@@ -65,19 +65,12 @@ export function DialogFormCategory({
       onSubmit={handleSubmit(onSubmit)}
       className="mt-6 flex flex-col gap-4 max-w-[398px] w-full"
     >
-      <div>
-        <Input
-          {...register('title')}
-          htmlFor="title"
-          labelText="Título"
-          placeholder="Ex. Alimentação"
-        />
-        {errors.title && (
-          <span className="text-danger text-xs mt-1">
-            {errors.title.message}
-          </span>
-        )}
-      </div>
+      <Input
+        {...register('title')}
+        htmlFor="title"
+        labelText="Título"
+        placeholder="Ex. Alimentação"
+      />
 
       <div className="flex flex-col gap-2">
         <Input

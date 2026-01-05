@@ -16,6 +16,7 @@ export function RadioGroup({ className, ...props }: RadioGroupProps) {
 type RadioGroupItemProps = ComponentProps<typeof RadioGroupPrimitive.Item> & {
   icon?: ReactNode;
   label?: string;
+  fullWidth?: boolean;
 };
 
 export function RadioGroupItem({
@@ -23,13 +24,14 @@ export function RadioGroupItem({
   icon,
   label,
   children,
+  fullWidth,
   ...props
 }: RadioGroupItemProps) {
   return (
-    <div className="flex items-center gap-2">
+    <div className={twMerge('flex items-center gap-2', fullWidth && 'w-full')}>
       <RadioGroupPrimitive.Item
         className={twMerge(
-          'group size-10 rounded-lg border-2 border-gray-300 bg-white flex items-center justify-center hover:border-brand-base transition-colors',
+          'group size-10 rounded-lg border border-gray-300 bg-white flex items-center justify-center hover:border-brand-base transition-colors',
           'data-[state=checked]:border-brand-base data-[state=checked]:bg-gray-100',
           'focus:ring-0',
           className,

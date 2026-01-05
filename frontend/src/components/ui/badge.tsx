@@ -17,7 +17,7 @@ const colorMap: Record<string, { light: string; dark: string }> = {
 };
 
 export function Badge({ title, color }: BadgeProps) {
-  const colors = colorMap[color] || colorMap['blue-base'];
+  const colors = colorMap[color] || colorMap['blue'];
 
   return (
     <span

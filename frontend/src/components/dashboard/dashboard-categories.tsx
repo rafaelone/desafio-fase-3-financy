@@ -21,7 +21,7 @@ export function DashboardCategories() {
           Categorias
         </span>
         <Link
-          to="/"
+          to="/categories"
           className="text-brand-base items-center flex gap-1 font-medium text-sm leading-5 group hover:text-brand-dark"
         >
           Gerenciar

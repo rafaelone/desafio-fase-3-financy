@@ -2,7 +2,7 @@ import type { ComponentProps } from 'react';
 import { tv, type VariantProps } from 'tailwind-variants';
 
 const buttonVariants = tv({
-  base: 'font-medium transition-colors disabled:opacity-80 disabled:flex disabled:justify-center disabled:items-center ',
+  base: 'font-medium transition-colors disabled:opacity-80 flex justify-center items-center ',
   variants: {
     background: {
       primary:

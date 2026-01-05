@@ -10,7 +10,7 @@ export function DashboardCategories() {
   const { data } = useQuery<{ listCategories: ListCategories }>(
     GET_DASHBOARD_CATEGORIES,
     {
-      variables: { limit: 5 },
+      variables: { limit: 12 },
     },
   );
 

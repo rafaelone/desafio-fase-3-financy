@@ -5,20 +5,27 @@ import { Button } from '../ui/button';
 import { Dialog } from '../dialog';
 import { DialogFormCategory } from '../dialog/dialog-form-category';
 import { CREATE_CATEGORY } from '@/lib/graphql/mutations/create-category';
+import { GET_DASHBOARD_CATEGORIES } from '@/lib/graphql/queries/dashboard-categories';
 import { useMutation } from '@apollo/client/react';
 import { toast } from 'sonner';
-import { colorMap } from '@/utils/colorMap';
 
 export function CategoriesHeader() {
   const [open, setOpen] = useState<boolean>(false);
 
   const [createCategory] = useMutation(CREATE_CATEGORY, {
+    refetchQueries: [
+      { query: GET_DASHBOARD_CATEGORIES, variables: { limit: 5 } },
+    ],
     onCompleted: () => {
       setOpen(false);
       toast.success('Categoria criada com sucesso!');
     },
-    onError: () => {
-      toast.error('Erro ao criar categoria');
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    update: (cache) => {
+      cache.evict({ fieldName: 'listCategories' });
+      cache.gc();
     },
   });
 
@@ -28,15 +35,13 @@ export function CategoriesHeader() {
     icon: string;
     color: string;
   }) => {
-    const colorHex = colorMap[data.color] || data.color;
-
     createCategory({
       variables: {
         data: {
           title: data.title,
           description: data.description || '',
           icon: data.icon,
-          color: colorHex,
+          color: data.color,
         },
       },
     });

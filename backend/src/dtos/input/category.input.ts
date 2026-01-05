@@ -1,5 +1,7 @@
 import { Field, InputType } from 'type-graphql';
-import { IsHexColor, IsNotEmpty, MinLength } from 'class-validator';
+import { IsNotEmpty, MinLength, IsIn } from 'class-validator';
+
+const VALID_COLORS = ['blue', 'purple', 'pink', 'red', 'orange', 'yellow', 'green', 'brand'];
 
 @InputType()
 export class CreateCategoryInput {
@@ -17,7 +19,7 @@ export class CreateCategoryInput {
 
   @Field(() => String)
   @IsNotEmpty({ message: 'Cor é obrigatória' })
-  @IsHexColor({ message: 'Cor deve ser um código hexadecimal válido (ex: #FF5733)' })
+  @IsIn(VALID_COLORS, { message: 'Cor inválida. Use: blue, purple, pink, red, orange, yellow, green ou brand' })
   color!: string;
 }
 
@@ -34,6 +36,6 @@ export class UpdateCategoryInput {
   icon?: string;
 
   @Field(() => String, { nullable: true })
-  @IsHexColor({ message: 'Cor deve ser um código hexadecimal válido (ex: #FF5733)' })
+  @IsIn(VALID_COLORS, { message: 'Cor inválida. Use: blue, purple, pink, red, orange, yellow, green ou brand' })
   color?: string;
 }

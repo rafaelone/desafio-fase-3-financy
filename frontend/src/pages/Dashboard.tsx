@@ -1,13 +1,7 @@
 import { DashboardBalanceContainer } from '@/components/dashboard/dashboard-balance-container';
 import { DashboardCategories } from '@/components/dashboard/dashboard-categories';
-import {
-  BriefcaseBusiness,
-  ChevronRight,
-  CircleArrowDown,
-  CircleArrowUp,
-  Plus,
-  Utensils,
-} from 'lucide-react';
+import { DashboardRecentTransactions } from '@/components/dashboard/dashboard-recent-transactions';
+import { ChevronRight, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Dialog } from '@/components/dialog';
 import { DialogFormTransaction } from '@/components/dialog/dialog-form-transaction';
@@ -16,6 +10,7 @@ import { useQuery, useMutation } from '@apollo/client/react';
 import { LIST_ALL_CATEGORIES } from '@/lib/graphql/queries/list-all-categories';
 import { CREATE_TRANSACTION } from '@/lib/graphql/mutations/create-transaction';
 import { GET_BALANCE } from '@/lib/graphql/queries/balance';
+import { GET_RECENT_TRANSACTIONS } from '@/lib/graphql/queries/recent-transactions';
 import { toast } from 'sonner';
 
 export function DashBoard() {
@@ -28,7 +23,10 @@ export function DashBoard() {
   }>(LIST_ALL_CATEGORIES);
 
   const [createTransaction] = useMutation(CREATE_TRANSACTION, {
-    refetchQueries: [{ query: GET_BALANCE }],
+    refetchQueries: [
+      { query: GET_BALANCE },
+      { query: GET_RECENT_TRANSACTIONS },
+    ],
     onCompleted: () => {
       toast.success('Transação criada com sucesso!');
       setIsTransactionModalOpen(false);
@@ -68,9 +66,9 @@ export function DashBoard() {
     <main className="max-w-[1184px] w-auto mx-auto mt-12">
       {/* cards */}
       <DashboardBalanceContainer />
-      <div className="flex gap-6 mt-6 items-start">
+      <div className="flex gap-6 mt-6 items-start max-lg:flex-col">
         {/* tabela de transacoes */}
-        <div className="w-full max-w-[781px] bg-white rounded-xl border border-gray-200">
+        <div className="max-lg:max-w-full w-full max-w-[781px] bg-white rounded-xl border border-gray-200">
           {/* header */}
           <div className="flex items-center justify-between h-[61px] border-b border-b-gray-200 px-6">
             <span className="font-medium text-xs leading-4  text-gray-500 uppercase">
@@ -85,71 +83,7 @@ export function DashBoard() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-[1fr_160px_160px] items-center gap-4 px-6 h-[80px] border-b border-b-gray-200">
-            {/* Informações principais - ocupa o espaço disponível (1fr) */}
-            <div className="flex items-center gap-4 min-w-0">
-              <div className="size-10 rounded-[8px] bg-green-light flex items-center justify-center shrink-0">
-                <BriefcaseBusiness className="size-4 text-green-base" />
-              </div>
-              <div className="flex flex-col min-w-0 flex-1">
-                <strong className="font-medium text-base leading-6 text-gray-800 truncate">
-                  Pagamento de Salário
-                </strong>
-
-                <span className="font-normal text-sm leading-5 text-gray-600">
-                  01/12/25
-                </span>
-              </div>
-            </div>
-
-            {/* Badge de Receita - coluna fixa de 160px */}
-            <div className="flex justify-center">
-              <span className="px-6 py-1 rounded-full bg-green-light text-green-dark font-medium text-sm leading-5">
-                Receita
-              </span>
-            </div>
-
-            {/* Valor - largura automática */}
-            <div className="flex items-center gap-2 justify-end">
-              <strong className="font-semibold text-sm leading-5 text-right text-gray-800">
-                + R$ 4.250,00
-              </strong>
-              <CircleArrowUp className="size-4 text-brand-base" />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-[1fr_160px_160px] items-center gap-4 px-6 h-[80px] border-b border-b-gray-200">
-            {/* Informações principais - ocupa o espaço disponível (1fr) */}
-            <div className="flex items-center gap-4 min-w-0">
-              <div className="size-10 rounded-[8px] bg-blue-light flex items-center justify-center shrink-0">
-                <Utensils className="size-4 text-blue-base" />
-              </div>
-              <div className="flex flex-col min-w-0 flex-1">
-                <strong className="font-medium text-base leading-6 text-gray-800 truncate">
-                  Jantar no Restaurante
-                </strong>
-
-                <span className="font-normal text-sm leading-5 text-gray-600">
-                  30/11/25
-                </span>
-              </div>
-            </div>
-
-            {/* Badge de Receita - coluna fixa de 160px */}
-            <div className="flex justify-center">
-              <span className="px-6 py-1 rounded-full bg-blue-light text-blue-dark font-medium text-sm leading-5">
-                Alimentação
-              </span>
-            </div>
-
-            {/* Valor - largura automática */}
-            <div className="flex items-center gap-2 justify-end">
-              <strong className="font-semibold text-sm leading-5 text-right text-gray-800">
-                - R$ 89,50
-              </strong>
-              <CircleArrowDown className="size-4 text-red-base" />
-            </div>
-          </div>
+          <DashboardRecentTransactions />
 
           <div className="h-[60px] flex items-center justify-center">
             <button

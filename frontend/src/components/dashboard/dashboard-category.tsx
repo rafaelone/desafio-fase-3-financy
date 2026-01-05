@@ -15,7 +15,7 @@ export function DashboardCategory({
   value,
 }: DashboardCategoryProps) {
   return (
-    <li className="flex items-center justify-between gap-8">
+    <li className="flex items-center justify-between gap-8 max-sm:flex-col max-sm:gap-4">
       <Badge title={title} color={color} />
 
       <div className="flex items-center gap-4">

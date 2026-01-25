@@ -9,7 +9,7 @@ import { CircleArrowDown, CircleArrowUp, LoaderCircle } from 'lucide-react';
 import { Button } from '../ui/button';
 
 const transactionSchema = z.object({
-  description: z.string().optional(),
+  description: z.string().min(3, 'Informe uma descrição'),
   type: z.enum(['income', 'expense']),
   date: z.string().min(1, 'Data é obrigatória'),
   amount: z.number().positive('Valor deve ser maior que zero'),
@@ -81,6 +81,7 @@ export function DialogFormTransaction({
           htmlFor="description"
           labelText="Descrição"
           placeholder="Descrição da transação"
+          errorMessage={errors.description?.message}
         />
       </div>
 

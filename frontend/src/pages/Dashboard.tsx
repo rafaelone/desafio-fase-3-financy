@@ -64,18 +64,15 @@ export function DashBoard() {
   }
   return (
     <main className="max-w-[1184px] w-auto mx-auto mt-12">
-      {/* cards */}
       <DashboardBalanceContainer />
       <div className="flex gap-6 mt-6 items-start max-lg:flex-col">
-        {/* tabela de transacoes */}
         <div className="max-lg:max-w-full w-full max-w-[781px] bg-white rounded-xl border border-gray-200">
-          {/* header */}
           <div className="flex items-center justify-between h-[61px] border-b border-b-gray-200 px-6">
             <span className="font-medium text-xs leading-4  text-gray-500 uppercase">
               Transações recentes
             </span>
             <Link
-              to="/"
+              to="/transactions"
               className="text-brand-base items-center flex gap-1 font-medium text-sm leading-5 group hover:text-brand-dark"
             >
               Ver todas
@@ -95,7 +92,6 @@ export function DashBoard() {
             </button>
           </div>
         </div>
-        {/* tabela de categorias */}
         <DashboardCategories />
       </div>
 

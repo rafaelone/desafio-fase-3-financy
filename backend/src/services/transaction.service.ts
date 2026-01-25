@@ -60,12 +60,20 @@ export class TransactionService {
       let endDate: Date;
 
       if (month) {
-        startDate = new Date(year, month - 1, 1, 0, 0, 0);
-        endDate = new Date(year, month, 0, 23, 59, 59, 999);
+        // Criar datas em UTC para evitar problemas de timezone
+        startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0, 0));
+        endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999));
       } else {
-        startDate = new Date(year, 0, 1, 0, 0, 0);
-        endDate = new Date(year, 11, 31, 23, 59, 59, 999);
+        startDate = new Date(Date.UTC(year, 0, 1, 0, 0, 0, 0));
+        endDate = new Date(Date.UTC(year, 11, 31, 23, 59, 59, 999));
       }
+
+      console.log('🔍 Filtro de data:', {
+        year,
+        month,
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+      });
 
       where.date = {
         gte: startDate,
@@ -82,6 +90,8 @@ export class TransactionService {
         where.date.lte = filters.endDate;
       }
     }
+
+    console.log('🔍 Where clause completo:', JSON.stringify(where, null, 2));
 
     // Paginação
     const page = filters?.page || 1;
@@ -102,6 +112,13 @@ export class TransactionService {
     });
 
     const totalPages = Math.ceil(total / perPage);
+
+    console.log('🔍 Resultado:', {
+      total,
+      totalPages,
+      transactionsCount: transactions.length,
+      firstTransactionDate: transactions[0]?.date,
+    });
 
     return {
       transactions,

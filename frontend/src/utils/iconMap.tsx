@@ -15,6 +15,7 @@ import {
   PiggyBank,
   Wrench,
   Coffee,
+  Wallet,
 } from 'lucide-react';
 
 export const iconMap: Record<
@@ -37,4 +38,5 @@ export const iconMap: Record<
   'piggy-bank': PiggyBank,
   wrench: Wrench,
   coffee: Coffee,
+  Wallet: Wallet,
 };

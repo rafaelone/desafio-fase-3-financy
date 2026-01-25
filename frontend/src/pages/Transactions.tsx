@@ -1,6 +1,4 @@
 import {
-  ChevronLeft,
-  ChevronRight,
   CircleArrowDown,
   CircleArrowUp,
   Plus,
@@ -8,10 +6,21 @@ import {
   Trash,
 } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client/react';
+import { useQuery, useMutation } from '@apollo/client/react';
 import { LIST_TRANSACTIONS } from '@/lib/graphql/queries/list-transactions';
+import { LIST_ALL_CATEGORIES } from '@/lib/graphql/queries/list-all-categories';
+import { DELETE_TRANSACTION } from '@/lib/graphql/mutations/delete-transaction';
+import { GET_BALANCE } from '@/lib/graphql/queries/balance';
+import { GET_RECENT_TRANSACTIONS } from '@/lib/graphql/queries/recent-transactions';
+import { GET_DASHBOARD_CATEGORIES } from '@/lib/graphql/queries/dashboard-categories';
 import { iconMap } from '@/utils/iconMap';
 import { TransactionsFilters } from '@/components/transactions/transactions-filters';
+import { TransactionRowSkeleton } from '@/components/transactions/transaction-row-skeleton';
+import { Dialog } from '@/components/dialog';
+import { DialogFormTransaction } from '@/components/dialog/dialog-form-transaction';
+import { Pagination } from '@/components/ui/pagination';
+import { useTransactionModals } from '@/stores/transaction-modals';
+import { toast } from 'sonner';
 
 type Transaction = {
   id: string;
@@ -30,14 +39,23 @@ type Transaction = {
 
 export function Transactions() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const {
+    transactionModal,
+    openCreateModal,
+    openEditModal,
+    closeTransactionModal,
+  } = useTransactionModals();
 
   const page = Number(searchParams.get('page')) || 1;
   const type = searchParams.get('type') || '';
   const categoryId = searchParams.get('categoryId') || '';
-  const month = searchParams.get('month') || '';
-  const year = searchParams.get('year') || '';
 
-  const { data, loading } = useQuery<{
+  // Define valores default para mês/ano atual
+  const currentDate = new Date();
+  const month = searchParams.get('month') || String(currentDate.getMonth() + 1);
+  const year = searchParams.get('year') || String(currentDate.getFullYear());
+
+  const { data, loading, refetch } = useQuery<{
     listTransactions: {
       transactions: Transaction[];
       total: number;
@@ -49,17 +67,39 @@ export function Transactions() {
         description: searchParams.get('description') || undefined,
         type: type || undefined,
         categoryId: categoryId || undefined,
-        month: month ? Number(month) : undefined,
-        year: year ? Number(year) : undefined,
+        month: Number(month),
+        year: Number(year),
         page,
-        perPage: 12,
+        perPage: 10,
       },
+    },
+  });
+
+  const { data: categoriesData } = useQuery<{
+    listCategories: {
+      categories: Array<{ id: string; title: string }>;
+    };
+  }>(LIST_ALL_CATEGORIES);
+
+  const [deleteTransaction] = useMutation(DELETE_TRANSACTION, {
+    refetchQueries: [
+      { query: GET_BALANCE },
+      { query: GET_RECENT_TRANSACTIONS },
+      { query: GET_DASHBOARD_CATEGORIES, variables: { limit: 12 } },
+    ],
+    onCompleted: () => {
+      toast.success('Transação deletada com sucesso!');
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Erro ao deletar transação');
     },
   });
 
   const transactions = data?.listTransactions.transactions || [];
   const total = data?.listTransactions.total || 0;
   const totalPages = data?.listTransactions.totalPages || 1;
+  const categories = categoriesData?.listCategories.categories || [];
 
   function handlePageChange(newPage: number) {
     const newParams = new URLSearchParams(searchParams);
@@ -67,8 +107,12 @@ export function Transactions() {
     setSearchParams(newParams);
   }
 
-  const startItem = (page - 1) * 12 + 1;
-  const endItem = Math.min(page * 12, total);
+  function handleDeleteTransaction(id: string) {
+    deleteTransaction({
+      variables: { id },
+    });
+  }
+
   return (
     <div className="px-12">
       <div className="max-w-[1184px] w-auto mx-auto mt-12">
@@ -82,7 +126,10 @@ export function Transactions() {
               Gerencie todas as suas transações financeiras
             </span>
           </div>
-          <button className="bg-brand-base  px-3 justify-center py-2 text-white flex items-center gap-2 rounded-[8px] h-9 font-medium text-sm leading-5 hover:bg-brand-dark transition-colors">
+          <button
+            onClick={openCreateModal}
+            className="bg-brand-base  px-3 justify-center py-2 text-white flex items-center gap-2 rounded-[8px] h-9 font-medium text-sm leading-5 hover:bg-brand-dark transition-colors"
+          >
             <Plus className="size-4" />
             Nova transação
           </button>
@@ -116,11 +163,11 @@ export function Transactions() {
 
             <tbody>
               {loading ? (
-                <tr>
-                  <td colSpan={6} className="py-8 text-center">
-                    <span className="text-gray-500">Carregando...</span>
-                  </td>
-                </tr>
+                <>
+                  {Array.from({ length: 10 }).map((_, index) => (
+                    <TransactionRowSkeleton key={index} />
+                  ))}
+                </>
               ) : transactions.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-8 text-center">
@@ -137,11 +184,7 @@ export function Transactions() {
                     iconMap[transaction.category.icon] || iconMap.Wallet;
                   const isIncome = transaction.type === 'income';
                   const date = new Date(transaction.date);
-                  const formattedDate = date.toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: '2-digit',
-                  });
+                  const formattedDate = `${String(date.getUTCDate()).padStart(2, '0')}/${String(date.getUTCMonth() + 1).padStart(2, '0')}/${String(date.getUTCFullYear()).slice(-2)}`;
                   const formattedAmount = transaction.amount.toLocaleString(
                     'pt-BR',
                     {
@@ -204,10 +247,18 @@ export function Transactions() {
                       </td>
                       <td className="pr-6 py-4 border-b border-gray-200 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <button className="size-8 border border-gray-200 bg-white rounded-lg text-danger flex items-center justify-center hover:bg-gray-50 transition-colors">
+                          <button
+                            onClick={() =>
+                              handleDeleteTransaction(transaction.id)
+                            }
+                            className="size-8 border border-gray-200 bg-white rounded-lg text-danger flex items-center justify-center hover:bg-gray-50 transition-colors"
+                          >
                             <Trash className="size-4" />
                           </button>
-                          <button className="size-8 border border-gray-200 bg-white rounded-lg text-gray-700 flex items-center justify-center hover:bg-gray-50 transition-colors">
+                          <button
+                            onClick={() => openEditModal(transaction)}
+                            className="size-8 border border-gray-200 bg-white rounded-lg text-gray-700 flex items-center justify-center hover:bg-gray-50 transition-colors"
+                          >
                             <SquarePen className="size-4" />
                           </button>
                         </div>
@@ -218,64 +269,51 @@ export function Transactions() {
               )}
             </tbody>
           </table>
-          <footer className="px-6 py-5 flex items-center justify-between">
-            <span className="flex gap-1 font-normal text-sm text-gray-700">
-              {total > 0 ? `${startItem} a ${endItem}` : '0 a 0'}
-              <span className="h-5 bg-gray-700 w-px block" />
-              {total} {total === 1 ? 'resultado' : 'resultados'}
-            </span>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => handlePageChange(page - 1)}
-                disabled={page === 1}
-                className="size-8 rounded-lg text-gray-700 border border-gray-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
-              >
-                <ChevronLeft className="size-4" />
-              </button>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (pageNum) => {
-                  if (
-                    pageNum === 1 ||
-                    pageNum === totalPages ||
-                    (pageNum >= page - 1 && pageNum <= page + 1)
-                  ) {
-                    return (
-                      <button
-                        key={pageNum}
-                        onClick={() => handlePageChange(pageNum)}
-                        className={`size-8 rounded-lg border transition-colors flex items-center justify-center ${
-                          pageNum === page
-                            ? 'bg-brand-base text-white border-brand-base hover:bg-brand-dark'
-                            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                        }`}
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  } else if (pageNum === page - 2 || pageNum === page + 2) {
-                    return (
-                      <span key={pageNum} className="text-gray-500">
-                        ...
-                      </span>
-                    );
-                  }
-                  return null;
-                },
-              )}
-
-              <button
-                onClick={() => handlePageChange(page + 1)}
-                disabled={page === totalPages || totalPages === 0}
-                className="size-8 rounded-lg text-gray-700 border border-gray-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
-              >
-                <ChevronRight className="size-4" />
-              </button>
-            </div>
-          </footer>
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            totalItems={total}
+            itemsPerPage={10}
+            onPageChange={handlePageChange}
+          />
         </div>
         {/* tabela */}
       </div>
+
+      <Dialog
+        open={transactionModal.isOpen}
+        onOpenChange={(open) => {
+          if (!open) closeTransactionModal();
+        }}
+        title={
+          transactionModal.transaction ? 'Editar Transação' : 'Nova Transação'
+        }
+        description={
+          transactionModal.transaction
+            ? 'Atualize os dados da transação'
+            : 'Registre sua despesa ou receita'
+        }
+      >
+        <DialogFormTransaction
+          categories={categories}
+          transactionId={transactionModal.transaction?.id}
+          initialData={
+            transactionModal.transaction
+              ? {
+                  description: transactionModal.transaction.description,
+                  type: transactionModal.transaction.type,
+                  date: new Date(transactionModal.transaction.date)
+                    .toISOString()
+                    .split('T')[0],
+                  amount: transactionModal.transaction.amount,
+                  categoryId: transactionModal.transaction.categoryId,
+                }
+              : undefined
+          }
+          onSuccess={refetch}
+          onClose={closeTransactionModal}
+        />
+      </Dialog>
     </div>
   );
 }

@@ -8,6 +8,9 @@ import { LIST_ALL_CATEGORIES } from '@/lib/graphql/queries/list-all-categories';
 import { GET_TOTAL_CATEGORIES } from '@/lib/graphql/queries/total-categories';
 import { GET_TOTAL_TRANSACTIONS } from '@/lib/graphql/queries/total-transactions';
 import { GET_MOST_USED_CATEGORY } from '@/lib/graphql/queries/most-used-category';
+import { GET_BALANCE } from '@/lib/graphql/queries/balance';
+import { GET_RECENT_TRANSACTIONS } from '@/lib/graphql/queries/recent-transactions';
+import { GET_DASHBOARD_CATEGORIES } from '@/lib/graphql/queries/dashboard-categories';
 
 type CardCategoryProps = {
   id: string;
@@ -37,6 +40,9 @@ export function CardCategory({
       { query: GET_TOTAL_CATEGORIES },
       { query: GET_TOTAL_TRANSACTIONS },
       { query: GET_MOST_USED_CATEGORY },
+      { query: GET_BALANCE },
+      { query: GET_RECENT_TRANSACTIONS },
+      { query: GET_DASHBOARD_CATEGORIES, variables: { limit: 10 } },
     ],
     onCompleted: () => {
       toast.success('Categoria deletada com sucesso!');

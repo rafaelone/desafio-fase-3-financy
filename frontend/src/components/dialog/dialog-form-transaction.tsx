@@ -1,6 +1,13 @@
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useMutation } from '@apollo/client/react';
+import { CREATE_TRANSACTION } from '@/lib/graphql/mutations/create-transaction';
+import { UPDATE_TRANSACTION } from '@/lib/graphql/mutations/update-transaction';
+import { GET_BALANCE } from '@/lib/graphql/queries/balance';
+import { GET_RECENT_TRANSACTIONS } from '@/lib/graphql/queries/recent-transactions';
+import { GET_DASHBOARD_CATEGORIES } from '@/lib/graphql/queries/dashboard-categories';
+import { toast } from 'sonner';
 import { Input } from '../ui/input';
 import { Select } from '../ui/select';
 import { DatePicker } from '../ui/date-picker';
@@ -19,14 +26,54 @@ const transactionSchema = z.object({
 type TransactionFormData = z.infer<typeof transactionSchema>;
 
 type DialogFormTransactionProps = {
-  onSubmit: (data: TransactionFormData) => void;
   categories: Array<{ id: string; title: string }>;
+  initialData?: Partial<TransactionFormData>;
+  transactionId?: string;
+  onSuccess?: () => void;
+  onClose?: () => void;
 };
 
 export function DialogFormTransaction({
-  onSubmit,
   categories,
+  initialData,
+  transactionId,
+  onSuccess,
+  onClose,
 }: DialogFormTransactionProps) {
+  const isEditing = !!transactionId;
+
+  const [createTransaction] = useMutation(CREATE_TRANSACTION, {
+    refetchQueries: [
+      { query: GET_BALANCE },
+      { query: GET_RECENT_TRANSACTIONS },
+      { query: GET_DASHBOARD_CATEGORIES, variables: { limit: 10 } },
+    ],
+    onCompleted: () => {
+      toast.success('Transação criada com sucesso!');
+      onClose?.();
+      onSuccess?.();
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Erro ao criar transação');
+    },
+  });
+
+  const [updateTransaction] = useMutation(UPDATE_TRANSACTION, {
+    refetchQueries: [
+      { query: GET_BALANCE },
+      { query: GET_RECENT_TRANSACTIONS },
+      { query: GET_DASHBOARD_CATEGORIES, variables: { limit: 10 } },
+    ],
+    onCompleted: () => {
+      toast.success('Transação atualizada com sucesso!');
+      onClose?.();
+      onSuccess?.();
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Erro ao atualizar transação');
+    },
+  });
+
   const {
     register,
     handleSubmit,
@@ -35,11 +82,42 @@ export function DialogFormTransaction({
   } = useForm<TransactionFormData>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
-      type: 'expense',
-      amount: 0,
-      date: '',
+      type: initialData?.type || 'expense',
+      amount: initialData?.amount || 0,
+      date: initialData?.date || '',
+      description: initialData?.description || '',
+      categoryId: initialData?.categoryId || '',
     },
   });
+
+  function onSubmit(data: TransactionFormData) {
+    if (isEditing) {
+      updateTransaction({
+        variables: {
+          id: transactionId,
+          data: {
+            type: data.type,
+            description: data.description,
+            date: new Date(data.date),
+            amount: data.amount,
+            categoryId: data.categoryId,
+          },
+        },
+      });
+    } else {
+      createTransaction({
+        variables: {
+          data: {
+            type: data.type,
+            description: data.description,
+            date: new Date(data.date),
+            amount: data.amount,
+            categoryId: data.categoryId,
+          },
+        },
+      });
+    }
+  }
 
   return (
     <form

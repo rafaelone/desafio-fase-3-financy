@@ -43,9 +43,6 @@ export class CategoryService {
           },
         },
       },
-      orderBy: {
-        title: 'asc',
-      },
     });
 
     const categoriesWithStats = categories.map((category) => {
@@ -68,11 +65,17 @@ export class CategoryService {
       };
     });
 
-    categoriesWithStats.sort((a, b) => b.transactionCount - a.transactionCount);
+    // Ordenar alfabeticamente ignorando maiúsculas/minúsculas
+    categoriesWithStats.sort((a, b) => 
+      a.title.toLowerCase().localeCompare(b.title.toLowerCase(), 'pt-BR')
+    );
 
     const totalCategories = categoriesWithStats.length;
     const totalTransactions = categoriesWithStats.reduce((sum, cat) => sum + cat.transactionCount, 0);
-    const mostUsedCategory = categoriesWithStats[0]?.transactionCount > 0 ? categoriesWithStats[0] : null;
+    
+    // Para mostrar a categoria mais usada, ordena por transactionCount
+    const sortedByUsage = [...categoriesWithStats].sort((a, b) => b.transactionCount - a.transactionCount);
+    const mostUsedCategory = sortedByUsage[0]?.transactionCount > 0 ? sortedByUsage[0] : null;
 
     const limitedCategories = limit ? categoriesWithStats.slice(0, limit) : categoriesWithStats;
 

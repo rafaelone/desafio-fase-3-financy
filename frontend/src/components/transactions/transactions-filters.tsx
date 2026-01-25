@@ -11,10 +11,10 @@ export function TransactionsFilters() {
     searchParams.get('description') || '',
   );
 
-  const type = searchParams.get('type') || '';
-  const categoryId = searchParams.get('categoryId') || '';
   const month = searchParams.get('month') || '';
   const year = searchParams.get('year') || '';
+  const type = searchParams.get('type') || '';
+  const categoryId = searchParams.get('categoryId') || '';
 
   const { data: categoriesData } = useQuery<{
     listCategories: {

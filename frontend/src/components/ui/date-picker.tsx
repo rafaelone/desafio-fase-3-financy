@@ -16,11 +16,17 @@ type DatePickerProps = {
 export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
   ({ htmlFor, labelText, errorMessage, value, onChange }, ref) => {
     const [isOpen, setIsOpen] = useState(false);
-    const selectedDate = value ? new Date(value) : undefined;
+
+    // Corrige o bug de timezone: cria a data no timezone local
+    const selectedDate = value ? new Date(value + 'T00:00:00') : undefined;
 
     const handleSelect = (date: Date | undefined) => {
       if (date && onChange) {
-        onChange(format(date, 'yyyy-MM-dd'));
+        // Garante que a data seja formatada no timezone local
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        onChange(`${year}-${month}-${day}`);
       }
       setIsOpen(false);
     };

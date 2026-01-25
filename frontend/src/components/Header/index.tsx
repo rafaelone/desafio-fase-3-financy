@@ -1,7 +1,7 @@
 import FinancyLogo from '@/assets/icons/financy-logo.svg';
-import { Link } from 'react-router-dom';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { getInitials } from '@/utils/getInitials';
+import { HeaderLink } from './header-link';
 
 export function Header() {
   return (
@@ -11,28 +11,13 @@ export function Header() {
         <nav>
           <ul className="flex items-center gap-5">
             <li>
-              <Link
-                to="/dashboard"
-                className="font-semibold text-sm leading-5 text-brand-base hover:text-brand-dark transition-colors"
-              >
-                Dashboard
-              </Link>
+              <HeaderLink to="/dashboard">Dashboard</HeaderLink>
             </li>
             <li>
-              <Link
-                to="/transactions"
-                className="font-normal text-sm leading-5 text-gray-600 hover:text-gray-400 transition-colors"
-              >
-                Transações
-              </Link>
+              <HeaderLink to="/transactions">Transações</HeaderLink>
             </li>
             <li>
-              <Link
-                to="/categories"
-                className="font-normal text-sm leading-5 text-gray-600 hover:text-gray-400 transition-colors "
-              >
-                Categorias
-              </Link>
+              <HeaderLink to="/categories">Categorias</HeaderLink>
             </li>
           </ul>
         </nav>

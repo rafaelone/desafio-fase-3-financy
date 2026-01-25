@@ -4,6 +4,7 @@ import { CircleArrowDown, CircleArrowUp } from 'lucide-react';
 import { iconMap } from '@/utils/iconMap';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { DashboardTransactionSkeleton } from './dashboard-transaction-skeleton';
 
 type Transaction = {
   id: string;
@@ -31,9 +32,11 @@ export function DashboardRecentTransactions() {
 
   if (loading) {
     return (
-      <div className="px-6 py-8 text-center text-gray-500">
-        Carregando transações...
-      </div>
+      <>
+        {Array.from({ length: 5 }).map((_, index) => (
+          <DashboardTransactionSkeleton key={index} />
+        ))}
+      </>
     );
   }
 
@@ -64,7 +67,7 @@ export function DashboardRecentTransactions() {
               <div
                 className={`size-10 rounded-[8px] bg-${color}-light flex items-center justify-center shrink-0`}
               >
-                <IconComponent className={`size-4 text-${color}-base`} />
+                <IconComponent className={`size-4 text-${color}-dark`} />
               </div>
               <div className="flex flex-col min-w-0 flex-1">
                 <strong className="font-medium text-base leading-6 text-gray-800 truncate">

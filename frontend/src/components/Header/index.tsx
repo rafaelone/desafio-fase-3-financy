@@ -2,8 +2,20 @@ import FinancyLogo from '@/assets/icons/financy-logo.svg';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { getInitials } from '@/utils/getInitials';
 import { HeaderLink } from './header-link';
+import { useQuery } from '@apollo/client/react';
+import { GET_ME } from '@/lib/graphql/queries/me';
 
 export function Header() {
+  const { data } = useQuery<{
+    me: {
+      id: string;
+      fullName: string;
+      email: string;
+    };
+  }>(GET_ME);
+
+  const user = data?.me;
+
   return (
     <header className="px-12 py-4 bg-white h-[68px] w-full">
       <div className="flex items-center justify-between max-w-[1184px] w-full mx-auto">
@@ -21,11 +33,13 @@ export function Header() {
             </li>
           </ul>
         </nav>
-        <Avatar>
-          <AvatarFallback className="bg-gray-300 text-gray-800 font-medium text-sm leading-5">
-            {getInitials('Rafael Sergio')}
-          </AvatarFallback>
-        </Avatar>
+        <HeaderLink to="/me">
+          <Avatar>
+            <AvatarFallback className="bg-gray-300 text-gray-800 font-medium text-sm leading-5">
+              {user ? getInitials(user.fullName) : '...'}
+            </AvatarFallback>
+          </Avatar>
+        </HeaderLink>
       </div>
     </header>
   );

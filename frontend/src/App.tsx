@@ -6,6 +6,7 @@ import { Transactions } from './pages/Transactions';
 import { Categories } from './pages/Categories';
 import { useAuthStore } from './stores/auth';
 import { PrivateLayout } from './components/layouts/private-layout';
+import { Perfil } from './pages/Perfil';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore();
@@ -39,7 +40,6 @@ function RootRedirect() {
 function App() {
   return (
     <Routes>
-      {/* Rota raiz - mostra SignIn ou Dashboard baseado na autenticação */}
       <Route path="/" element={<RootRedirect />} />
 
       <Route
@@ -51,7 +51,6 @@ function App() {
         }
       />
 
-      {/* Rotas protegidas */}
       <Route
         path="/dashboard"
         element={
@@ -79,7 +78,15 @@ function App() {
         }
       />
 
-      {/* Rota 404 */}
+      <Route
+        path="/me"
+        element={
+          <ProtectedRoute>
+            <Perfil />
+          </ProtectedRoute>
+        }
+      />
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

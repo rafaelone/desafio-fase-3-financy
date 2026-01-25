@@ -68,12 +68,6 @@ export class TransactionService {
         endDate = new Date(Date.UTC(year, 11, 31, 23, 59, 59, 999));
       }
 
-      console.log('🔍 Filtro de data:', {
-        year,
-        month,
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString(),
-      });
 
       where.date = {
         gte: startDate,
@@ -91,7 +85,6 @@ export class TransactionService {
       }
     }
 
-    console.log('🔍 Where clause completo:', JSON.stringify(where, null, 2));
 
     // Paginação
     const page = filters?.page || 1;
@@ -113,12 +106,6 @@ export class TransactionService {
 
     const totalPages = Math.ceil(total / perPage);
 
-    console.log('🔍 Resultado:', {
-      total,
-      totalPages,
-      transactionsCount: transactions.length,
-      firstTransactionDate: transactions[0]?.date,
-    });
 
     return {
       transactions,

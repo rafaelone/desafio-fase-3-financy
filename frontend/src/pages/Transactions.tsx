@@ -116,8 +116,7 @@ export function Transactions() {
   return (
     <div className="px-12">
       <div className="max-w-[1184px] w-auto mx-auto mt-12">
-        {/* header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between max-lg:flex-col max-lg:items-start max-lg:gap-4">
           <div className="flex justify-center flex-col gap-0.5">
             <strong className="font-bold text-2xl leading-8 text-gray-800">
               Transações

@@ -9,7 +9,7 @@ export function Categories() {
     <div className="px-12">
       <div className="max-w-[1184px] w-auto mx-auto mt-12">
         <CategoriesHeader />
-        <div className="my-8 flex items-center gap-6">
+        <div className="my-8 flex items-center gap-6 max-lg:flex-col">
           <TotalCategories />
           <TotalTransactions />
           <MostUsedCategory />

@@ -9,6 +9,8 @@ import { useMutation } from '@apollo/client/react';
 import { UPDATE_USER } from '@/lib/graphql/mutations/update-profile';
 import { GET_ME } from '@/lib/graphql/queries/me';
 import { useEffect } from 'react';
+import { useAuthStore } from '@/stores/auth';
+import { useNavigate } from 'react-router-dom';
 
 const profileSchema = z.object({
   fullName: z
@@ -30,6 +32,9 @@ type ProfileFormProps = {
 };
 
 export function ProfileForm({ initialData }: ProfileFormProps) {
+  const navigate = useNavigate();
+  const logout = useAuthStore((state) => state.logout);
+
   const {
     register,
     handleSubmit,
@@ -60,6 +65,12 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
     await updateUser({
       variables: { fullName },
     });
+  }
+
+  function handleLogout() {
+    logout();
+    toast.success('Logout realizado com sucesso!');
+    navigate('/sign-in');
   }
 
   return (
@@ -106,11 +117,13 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
           )}
         </Button>
         <Button
+          type="button"
           disabled={isSubmitting}
           background="secondary"
           size="lg"
           fontSize="base"
           className="flex items-center gap-2"
+          onClick={handleLogout}
         >
           <LogOut className="size-[18px] text-danger" />
           Sair da conta

@@ -62,8 +62,26 @@ export class TransactionResolver {
   async category(@Root() transaction: TransactionModel): Promise<CategoryModel> {
     const category = await prismaClient.category.findUnique({
       where: { id: transaction.categoryId },
+      include: {
+        transactions: {
+          select: {
+            amount: true,
+          },
+        },
+      },
     });
     if (!category) throw new Error('Categoria não encontrada');
-    return category;
+
+    const transactionCount = category.transactions.length;
+    const totalAmount = category.transactions.reduce(
+      (sum, t) => sum + t.amount,
+      0,
+    );
+
+    return {
+      ...category,
+      transactionCount,
+      totalAmount,
+    };
   }
 }

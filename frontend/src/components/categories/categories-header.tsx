@@ -48,7 +48,7 @@ export function CategoriesHeader() {
   };
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between max-lg:flex-col max-lg:items-start max-lg:gap-4">
       <div className="flex justify-center flex-col gap-0.5">
         <strong className="font-bold text-2xl leading-8 text-gray-800">
           Categorias

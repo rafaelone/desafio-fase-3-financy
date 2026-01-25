@@ -58,7 +58,7 @@ export function CardCategory({
 
   return (
     <>
-      <div className="flex flex-col p-6 bg-white rounded-xl border border-gray-200 w-[284px] gap-5">
+      <div className="flex flex-col p-6 bg-white rounded-xl border border-gray-200 w-[284px] gap-5 max-md:w-full">
         <div className="flex items-start justify-between">
           <div
             className={`flex items-center justify-center bg-${color}-light size-10 rounded-lg`}

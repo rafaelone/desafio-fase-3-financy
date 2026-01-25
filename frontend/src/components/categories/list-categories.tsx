@@ -88,7 +88,7 @@ export function ListCategories() {
     <>
       <ul className="flex items-center gap-4 flex-wrap w-full">
         {categories.map((category) => (
-          <li key={category.id}>
+          <li key={category.id} className="max-md:w-full">
             <CardCategory
               id={category.id}
               title={category.title}

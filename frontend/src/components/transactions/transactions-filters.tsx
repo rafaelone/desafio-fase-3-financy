@@ -65,9 +65,9 @@ export function TransactionsFilters() {
   return (
     <form
       onSubmit={handleSearchSubmit}
-      className="w-full p-6 flex items-end gap-4 bg-white mt-8 border border-gray-200 rounded-xl"
+      className="w-full p-6 flex items-end gap-4 bg-white mt-8 border border-gray-200 rounded-xl max-lg:flex-col max-lg:items-start"
     >
-      <div className="flex-1">
+      <div className="flex-1 max-lg:w-full">
         <div className="flex flex-col gap-2">
           <label
             htmlFor="search"
@@ -89,7 +89,7 @@ export function TransactionsFilters() {
         </div>
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 max-lg:w-full">
         <div className="flex flex-col gap-2">
           <label className="text-gray-700 font-medium text-sm leading-5">
             Tipo
@@ -109,7 +109,7 @@ export function TransactionsFilters() {
         </div>
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 max-lg:w-full">
         <div className="flex flex-col gap-2">
           <label className="text-gray-700 font-medium text-sm leading-5">
             Categorias
@@ -132,7 +132,7 @@ export function TransactionsFilters() {
         </div>
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 max-lg:w-full">
         <div className="flex flex-col gap-2">
           <label className="text-gray-700 font-medium text-sm leading-5">
             Período

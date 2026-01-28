@@ -16,7 +16,7 @@ export function DashboardBalanceCard({
   value,
 }: BalanceCard) {
   return (
-    <div className="w-full h-[118px] p-6 bg-white border border-gray-200 rounded-xl gap-4 flex flex-col">
+    <div className="w-full h-29.5 p-6 bg-white border border-gray-200 rounded-xl gap-4 flex flex-col">
       <div className="gap-3 flex items-center">
         {icon}
         <span className="uppercase text-gray-500 font-medium text-xs leading-4">

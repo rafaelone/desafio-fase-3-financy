@@ -17,9 +17,9 @@ export function Header() {
   const user = data?.me;
 
   return (
-    <header className="px-12 py-4 bg-white h-[68px] w-full">
-      <div className="flex items-center justify-between max-w-[1184px] w-full mx-auto">
-        <img src={FinancyLogo} alt="Financy" className="w-[100px] h-6" />
+    <header className="px-12 py-4 bg-white h-17 w-full">
+      <div className="flex items-center justify-between max-w-296 w-full mx-auto">
+        <img src={FinancyLogo} alt="Financy" className="w-25 h-6" />
         <nav>
           <ul className="flex items-center gap-5">
             <li>

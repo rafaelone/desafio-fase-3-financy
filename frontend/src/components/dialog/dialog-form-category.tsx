@@ -216,25 +216,25 @@ export function DialogFormCategory({
               onValueChange={field.onChange}
               className="flex-row gap-2"
             >
-              <RadioGroupItem value="green" className="w-[50px] h-[30px] p-1">
+              <RadioGroupItem value="green" className="w-12.5 h-7.5 p-1">
                 <div className="w-full h-full bg-green-base rounded" />
               </RadioGroupItem>
-              <RadioGroupItem value="blue" className="w-[50px] h-[30px] p-1">
+              <RadioGroupItem value="blue" className="w-12.5 h-7.5 p-1">
                 <div className="w-full h-full bg-blue-base rounded" />
               </RadioGroupItem>
-              <RadioGroupItem value="purple" className="w-[50px] h-[30px] p-1">
+              <RadioGroupItem value="purple" className="w-12.5 h-7.5 p-1">
                 <div className="w-full h-full bg-purple-base rounded" />
               </RadioGroupItem>
-              <RadioGroupItem value="pink" className="w-[50px] h-[30px] p-1">
+              <RadioGroupItem value="pink" className="w-12.5 h-7.5 p-1">
                 <div className="w-full h-full bg-pink-base rounded" />
               </RadioGroupItem>
-              <RadioGroupItem value="red" className="w-[50px] h-[30px] p-1">
+              <RadioGroupItem value="red" className="w-12.5 h-7.5 p-1">
                 <div className="w-full h-full bg-red-base rounded" />
               </RadioGroupItem>
-              <RadioGroupItem value="orange" className="w-[50px] h-[30px] p-1">
+              <RadioGroupItem value="orange" className="w-12.5 h-7.5 p-1">
                 <div className="w-full h-full bg-orange-base rounded" />
               </RadioGroupItem>
-              <RadioGroupItem value="yellow" className="w-[50px] h-[30px] p-1">
+              <RadioGroupItem value="yellow" className="w-12.5 h-7.5 p-1">
                 <div className="w-full h-full bg-yellow-base rounded" />
               </RadioGroupItem>
             </RadioGroup>

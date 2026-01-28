@@ -65,7 +65,6 @@ export class CategoryService {
       };
     });
 
-    // Ordenar alfabeticamente ignorando maiúsculas/minúsculas
     categoriesWithStats.sort((a, b) => 
       a.title.toLowerCase().localeCompare(b.title.toLowerCase(), 'pt-BR')
     );
@@ -73,7 +72,6 @@ export class CategoryService {
     const totalCategories = categoriesWithStats.length;
     const totalTransactions = categoriesWithStats.reduce((sum, cat) => sum + cat.transactionCount, 0);
     
-    // Para mostrar a categoria mais usada, ordena por transactionCount
     const sortedByUsage = [...categoriesWithStats].sort((a, b) => b.transactionCount - a.transactionCount);
     const mostUsedCategory = sortedByUsage[0]?.transactionCount > 0 ? sortedByUsage[0] : null;
 
@@ -146,7 +144,6 @@ export class CategoryService {
       },
     });
 
-    // Busca as transações para calcular stats
     const transactions = await prismaClient.transaction.findMany({
       where: {
         categoryId: categoryId,

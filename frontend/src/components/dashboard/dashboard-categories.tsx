@@ -13,8 +13,8 @@ export function DashboardCategories() {
   );
 
   return (
-    <div className="max-w-[378px] w-full bg-white rounded-xl border border-gray-200 max-lg:max-w-full">
-      <div className="flex items-center justify-between h-[61px] border-b border-b-gray-200 px-6">
+    <div className="max-w-94.5 w-full bg-white rounded-xl border border-gray-200 max-lg:max-w-full">
+      <div className="flex items-center justify-between h-15.25 border-b border-b-gray-200 px-6">
         <span className="font-medium text-xs leading-4  text-gray-500 uppercase">
           Categorias
         </span>

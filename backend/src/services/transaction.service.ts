@@ -86,15 +86,12 @@ export class TransactionService {
     }
 
 
-    // Paginação
     const page = filters?.page || 1;
     const perPage = filters?.perPage || 10;
     const skip = (page - 1) * perPage;
 
-    // Buscar total de registros
     const total = await prismaClient.transaction.count({ where });
 
-    // Buscar transações paginadas
     const transactions = await prismaClient.transaction.findMany({
       where,
       orderBy: {

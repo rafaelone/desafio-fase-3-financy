@@ -122,7 +122,7 @@ export function DialogFormTransaction({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="mt-6 flex flex-col gap-4 w-[398px] "
+      className="mt-6 flex flex-col gap-4 w-99.5 "
     >
       <Controller
         name="type"
